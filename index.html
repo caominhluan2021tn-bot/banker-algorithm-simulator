@@ -35,34 +35,42 @@
             font-family: var(--sans);
             min-height: 100vh;
             overflow-x: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+            cursor: default;
         }
 
-            body::before {
-                content: '';
-                position: fixed;
-                inset: 0;
-                background-image: linear-gradient(rgba(138, 110, 230, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(138, 110, 230, 0.05) 1px, transparent 1px);
-                background-size: 30px 30px;
-                pointer-events: none;
-                z-index: 0;
-            }
+        input, select, #log-output, .trace-body {
+            user-select: text;
+            -webkit-user-select: text;
+        }
 
-            body::after {
-                content: '';
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background: radial-gradient(circle at 80% 20%, rgba(138, 110, 230, 0.1) 0%, transparent 40%), radial-gradient(circle at 20% 80%, rgba(61, 52, 124, 0.2) 0%, transparent 50%);
-                pointer-events: none;
-                z-index: 0;
-            }
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: linear-gradient(rgba(138, 110, 230, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(138, 110, 230, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 80% 20%, rgba(138, 110, 230, 0.1) 0%, transparent 40%), radial-gradient(circle at 20% 80%, rgba(61, 52, 124, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
 
         .container {
-            max-width: 1280px;
+            max-width: 1440px;
             margin: 0 auto;
-            padding: 0 24px;
+            padding: 0 32px;
             position: relative;
             z-index: 1;
         }
@@ -194,8 +202,8 @@
         /* ── Matrices ── */
         .matrix-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
             margin-bottom: 24px;
         }
 
@@ -206,6 +214,8 @@
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             position: relative;
+            display: flex;
+            flex-direction: column;
         }
 
             .matrix-card::before {
@@ -245,7 +255,9 @@
         .matrix-body {
             padding: 16px;
             overflow-x: auto;
+            overflow-y: auto;
             max-height: 400px;
+            flex: 1;
         }
 
         table {
@@ -279,12 +291,12 @@
             font-size: .85rem;
         }
 
+        /* Đã sửa: Căn giữa tuyệt đối cho P0, P1... */
         .proc-label {
             font-weight: 700;
             color: var(--accent2);
             font-size: .78rem;
-            text-align: left !important;
-            padding-left: 14px !important;
+            text-align: center !important;
         }
 
         .editable-cell {
@@ -613,7 +625,7 @@
             color: var(--accent);
         }
 
-        /* ── SỬA LỖI UI PHẦN REQUEST SECTION ── */
+        /* ── REQUEST SECTION ── */
         .request-box {
             background: var(--surface);
             border: 1px solid var(--border);
@@ -635,18 +647,18 @@
         .request-layout {
             display: flex;
             gap: 16px;
-            align-items: flex-end; /* Căn đáy */
+            align-items: flex-end;
         }
 
         .req-col-fixed, .req-col-btn {
             flex-shrink: 0;
-            margin-bottom: 12px; /* Bù trừ cho chiều cao của thanh cuộn ở cột giữa */
+            margin-bottom: 8px;
         }
 
         .req-col-scrollable {
             flex: 1;
             overflow-x: auto;
-            padding-bottom: 12px; /* Không gian cho thanh cuộn */
+            padding-bottom: 8px;
             mask-image: linear-gradient(to right, black 95%, transparent 100%);
             -webkit-mask-image: linear-gradient(to right, black 95%, transparent 100%);
         }
@@ -711,7 +723,7 @@
             font-family: var(--mono);
             font-size: .78rem;
             line-height: 1.8;
-            max-height: 200px;
+            max-height: 250px;
             overflow-y: auto;
             color: var(--accent2);
         }
@@ -734,22 +746,26 @@
             color: var(--warn);
         }
 
+        /* ── Custom Scrollbar (Tinh giản chuẩn Desktop) ── */
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
         }
 
         ::-webkit-scrollbar-track {
-            background: transparent;
+            background: rgba(0,0,0,0.1);
+            border-radius: 4px;
         }
 
         ::-webkit-scrollbar-thumb {
             background: var(--surface2);
             border-radius: 4px;
+            border: 1px solid transparent;
+            background-clip: padding-box;
         }
 
             ::-webkit-scrollbar-thumb:hover {
-                background: var(--accent2);
+                background-color: var(--accent2);
             }
 
         /* ── Stats Cards ── */
@@ -810,7 +826,7 @@
             font-family: var(--mono);
         }
 
-        @media(max-width:640px) {
+        @media(max-width:768px) {
             header h1 {
                 font-size: 1.3rem;
             }
@@ -832,6 +848,10 @@
 
             .req-col-fixed, .req-col-btn {
                 margin-bottom: 0;
+            }
+
+            .container {
+                padding: 0 16px;
             }
         }
     </style>
@@ -986,7 +1006,6 @@
 
         // ── UI BUILDERS ──
         function getResourceLabel(index) {
-            // Từ 0 đến 25: A đến Z. Lớn hơn 25: R0, R1, R2... (0 tương ứng index 26)
             const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
             if (index < 26) {
                 return alphabet[index];
