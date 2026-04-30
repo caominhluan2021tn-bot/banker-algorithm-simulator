@@ -84,7 +84,7 @@
         }
 
         .sidebar {
-            width: 270px;
+            width: 280px; /* Tăng nhẹ độ rộng để chứa thanh cuộn mini */
             flex-shrink: 0;
             position: sticky;
             top: 24px;
@@ -97,7 +97,8 @@
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: 16px;
-            overflow: hidden;
+            max-height: calc(100vh - 48px);
+            overflow-y: auto;
             box-shadow: 0 10px 40px rgba(0,0,0,0.5);
         }
 
@@ -106,9 +107,9 @@
             border-bottom: 1px solid rgba(77, 65, 158, 0.4);
         }
 
-        .sidebar-section:last-child {
-            border-bottom: none;
-        }
+            .sidebar-section:last-child {
+                border-bottom: none;
+            }
 
         .sidebar-label {
             font-size: .68rem;
@@ -122,12 +123,12 @@
             gap: 8px;
         }
 
-        .sidebar-label::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: linear-gradient(90deg, var(--border), transparent);
-        }
+            .sidebar-label::after {
+                content: '';
+                flex: 1;
+                height: 1px;
+                background: linear-gradient(90deg, var(--border), transparent);
+            }
 
         .main-content {
             flex: 1;
@@ -350,7 +351,6 @@
             font-size: .85rem;
         }
 
-        /* Đã sửa: Căn giữa tuyệt đối cho P0, P1... */
         .proc-label {
             font-weight: 700;
             color: var(--accent2);
@@ -379,41 +379,76 @@
                 background: #2a2552;
             }
 
-        /* ── Available Vector ── */
-        .available-row {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            margin-bottom: 28px;
-            flex-wrap: nowrap;
-            overflow-x: auto;
-            padding-bottom: 10px;
+        /* ── ĐÃ SỬA: Lưới Sidebar CÓ THANH CUỘN NỘI BỘ & CĂN LỀ MŨI TÊN ── */
+        .res-grid-container {
+            display: grid;
+            /* Cột rộng 65px để chứa thoải mái số và 2 nút mũi tên */
+            grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
+            gap: 10px;
+            margin-bottom: 12px;
+            /* Khống chế chiều cao khoảng 3 hàng (mỗi hàng ~60px + gap) */
+            max-height: 195px;
+            overflow-y: auto; /* Bật thanh cuộn mini */
+            padding-right: 6px; /* Cách ra một chút để thanh cuộn không đè lên content */
         }
 
-        .avail-chip {
+            /* Thanh cuộn mini cực đẹp cho Grid */
+            .res-grid-container::-webkit-scrollbar {
+                width: 4px;
+            }
+
+            .res-grid-container::-webkit-scrollbar-track {
+                background: rgba(0,0,0,0.1);
+                border-radius: 4px;
+            }
+
+            .res-grid-container::-webkit-scrollbar-thumb {
+                background: var(--accent2);
+                border-radius: 4px;
+            }
+
+        .sidebar-chip {
             background: var(--surface2);
             border: 1px solid var(--accent2);
-            border-radius: 10px;
-            padding: 10px 18px;
+            border-radius: 8px;
+            padding: 8px 6px;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             box-shadow: inset 0 0 10px rgba(138, 110, 230, 0.2);
-            flex-shrink: 0;
         }
 
-            .avail-chip label {
+            .sidebar-chip label {
                 font-family: var(--mono);
                 font-size: .75rem;
                 color: #fff;
                 font-weight: 600;
+                line-height: 1;
             }
 
-            .avail-chip input {
-                width: 64px;
-                border-color: var(--accent2);
+            .sidebar-chip input {
+                width: 100%;
+                height: 28px;
                 background: #16161e;
+                border: 1px solid transparent;
+                border-radius: 4px;
+                color: var(--accent);
+                /* Đã căn lại lề để số và mũi tên trông đều nhau */
+                text-align: left;
+                padding-left: 10px;
+                font-family: var(--mono);
+                font-size: .85rem;
+                font-weight: 700;
+                outline: none;
+                transition: all 0.2s;
             }
+
+                .sidebar-chip input:focus {
+                    border-color: var(--accent);
+                    background: #2a2552;
+                    box-shadow: 0 0 8px var(--accent-glow);
+                }
 
         /* ── Buttons ── */
         .btn-row {
@@ -684,58 +719,6 @@
             color: var(--accent);
         }
 
-        /* ── REQUEST SECTION ── */
-        .request-box {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 22px;
-            margin-bottom: 28px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-            .request-box h3 {
-                font-size: .78rem;
-                font-family: var(--mono);
-                text-transform: uppercase;
-                letter-spacing: 1.5px;
-                color: var(--accent2);
-                margin-bottom: 14px;
-            }
-
-        .request-layout {
-            display: flex;
-            gap: 16px;
-            align-items: flex-end;
-        }
-
-        .req-col-fixed, .req-col-btn {
-            flex-shrink: 0;
-            margin-bottom: 8px;
-        }
-
-        .req-col-scrollable {
-            flex: 1;
-            overflow-x: auto;
-            padding-bottom: 8px;
-            mask-image: linear-gradient(to right, black 95%, transparent 100%);
-            -webkit-mask-image: linear-gradient(to right, black 95%, transparent 100%);
-        }
-
-        #req-vec-wrap {
-            display: flex;
-            gap: 12px;
-            align-items: flex-end;
-        }
-
-            #req-vec-wrap > * {
-                flex-shrink: 0;
-            }
-
-            #req-vec-wrap .input-group {
-                margin-bottom: 0;
-            }
-
         /* ── Log Panel ── */
         #log-panel {
             background: #0d0c16;
@@ -805,7 +788,7 @@
             color: var(--warn);
         }
 
-        /* ── Custom Scrollbar (Tinh giản chuẩn Desktop) ── */
+        /* ── Custom Scrollbar ── */
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
@@ -889,21 +872,26 @@
             .app-shell {
                 flex-direction: column;
             }
+
             .sidebar {
                 width: 100%;
                 position: static;
             }
+
             .sidebar-inner {
                 display: grid;
                 grid-template-columns: repeat(2, 1fr);
             }
+
             .sidebar-section {
                 border-bottom: none;
                 border-right: 1px solid rgba(77, 65, 158, 0.4);
             }
-            .sidebar-section:nth-child(even) {
-                border-right: none;
-            }
+
+                .sidebar-section:nth-child(even) {
+                    border-right: none;
+                }
+
             .matrix-grid {
                 grid-template-columns: 1fr;
             }
@@ -916,25 +904,6 @@
 
             .tag {
                 display: none;
-            }
-
-            .request-layout {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .req-col-scrollable {
-                mask-image: none;
-                -webkit-mask-image: none;
-                padding-bottom: 0;
-            }
-
-            .req-col-fixed, .req-col-btn {
-                margin-bottom: 0;
-            }
-
-            .container {
-                padding: 0 16px;
             }
 
             .sidebar-inner {
@@ -999,7 +968,7 @@
                     <!-- Available -->
                     <div class="sidebar-section">
                         <div class="sidebar-label">Vector Available</div>
-                        <div class="available-row" id="avail-row" style="margin-bottom:0; flex-wrap:wrap; padding-bottom:0;"></div>
+                        <div class="res-grid-container" id="avail-row"></div>
                     </div>
 
                     <!-- Buttons -->
@@ -1023,8 +992,8 @@
                                 <label>Tiến trình</label>
                                 <select id="req-pid" style="width:80px; height:34px; background:#1a1738; border:1px solid var(--surface2); border-radius:8px; color:var(--text); font-family:var(--mono); font-size:.85rem; padding:0 8px; outline:none;"></select>
                             </div>
-                            <div id="req-vec-wrap" style="display:flex; flex-wrap:wrap; gap:8px;"></div>
-                            <button class="btn btn-primary" style="width:100%; justify-content:center; height:36px;" onclick="handleRequest()">⚡ Gửi yêu cầu</button>
+                            <div id="req-vec-wrap" class="res-grid-container" style="margin-bottom:0;"></div>
+                            <button class="btn btn-primary" style="width:100%; justify-content:center; height:36px; margin-top:8px;" onclick="handleRequest()">⚡ Gửi yêu cầu</button>
                         </div>
                     </div>
 
@@ -1153,20 +1122,20 @@
 
             const avRow = document.getElementById('avail-row');
             avRow.innerHTML = resLabels.map((r, j) => `
-        <div class="avail-chip">
-          <label>${r}</label>
-          <input class="editable-cell" id="av${j}" type="number" min="0" value="${available[j]}" oninput="available[${j}]=parseInt(this.value)||0;updateStats()">
-        </div>`).join('');
+                    <div class="sidebar-chip">
+                        <label>${r}</label>
+                        <input id="av${j}" type="number" min="0" value="${available[j]}" oninput="available[${j}]=parseInt(this.value)||0;updateStats()">
+                    </div>`).join('');
 
             const sel = document.getElementById('req-pid');
             sel.innerHTML = Array.from({ length: N }, (_, i) => `<option>P${i}</option>`).join('');
 
             const wrap = document.getElementById('req-vec-wrap');
             wrap.innerHTML = resLabels.map((r, j) => `
-        <div class="input-group">
-          <label>${r}</label>
-          <input class="editable-cell" style="height: 38px;" id="rq${j}" type="number" min="0" value="0">
-        </div>`).join('');
+                    <div class="sidebar-chip">
+                        <label>${r}</label>
+                        <input id="rq${j}" type="number" min="0" value="0">
+                    </div>`).join('');
 
             updateStats();
         }
@@ -1296,25 +1265,25 @@
 
             banner.className = 'result-banner ' + (safe ? 'safe' : 'unsafe');
             banner.innerHTML = `
-        <div class="result-icon">${safe ? '✅' : '🚨'}</div>
-        <div>
-          <div class="result-title">${safe ? 'HỆ THỐNG AN TOÀN (Safe State)' : 'HỆ THỐNG KHÔNG AN TOÀN (Unsafe State)'}</div>
-          <div class="result-desc">${safe
+            <div class="result-icon">${safe ? '✅' : '🚨'}</div>
+            <div>
+              <div class="result-title">${safe ? 'HỆ THỐNG AN TOÀN (Safe State)' : 'HỆ THỐNG KHÔNG AN TOÀN (Unsafe State)'}</div>
+              <div class="result-desc">${safe
                     ? `Tồn tại chuỗi an toàn gồm ${seq.length} tiến trình. Hệ thống có thể hoàn thành tất cả tiến trình.`
                     : 'Không tìm được chuỗi an toàn. Cảnh báo nguy cơ Deadlock.'
                 }</div>
-        </div>`;
+            </div>`;
 
             if (safe) {
                 seqWrap.innerHTML = `<div style="margin-bottom:14px">
-          <div style="font-size:.72rem;font-family:var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px">Chuỗi an toàn</div>
-          <div class="seq-track">
-            ${seq.map((p, k) => `
-              ${k > 0 ? '<span class="seq-arrow">→</span>' : ''}
-              <div class="seq-node" style="animation-delay:${k * 0.1}s">P${p}</div>
-            `).join('')}
-          </div>
-        </div>`;
+              <div style="font-size:.72rem;font-family:var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px">Chuỗi an toàn</div>
+              <div class="seq-track">
+                ${seq.map((p, k) => `
+                  ${k > 0 ? '<span class="seq-arrow">→</span>' : ''}
+                  <div class="seq-node" style="animation-delay:${k * 0.1}s">P${p}</div>
+                `).join('')}
+              </div>
+            </div>`;
             } else {
                 seqWrap.innerHTML = '';
             }
@@ -1326,18 +1295,18 @@
                 div.style.animationDelay = idx * 0.05 + 's';
                 if (s.ok) {
                     div.innerHTML = `
-            <div class="step-num">Step ${s.step}</div>
-            <div class="step-content">
-              Xét <span class="hi">P${s.proc}</span>:
-              Need = <span class="vec">[${s.need.join(', ')}]</span> ≤
-              Work = <span class="vec">[${s.work_before.join(', ')}]</span>
-              → <span class="ok">✓ Cấp phát</span>
-              → Work sau = <span class="vec">[${s.work_after.join(', ')}]</span>
-            </div>`;
+                <div class="step-num">Step ${s.step}</div>
+                <div class="step-content">
+                  Xét <span class="hi">P${s.proc}</span>:
+                  Need = <span class="vec">[${s.need.join(', ')}]</span> ≤
+                  Work = <span class="vec">[${s.work_before.join(', ')}]</span>
+                  → <span class="ok">✓ Cấp phát</span>
+                  → Work sau = <span class="vec">[${s.work_after.join(', ')}]</span>
+                </div>`;
                 } else {
                     div.innerHTML = `
-            <div class="step-num" style="background:rgba(255,117,143,.15);border-color:rgba(255,117,143,.3);color:var(--danger)">Kết thúc</div>
-            <div class="step-content"><span class="no">✗ Không tìm được tiến trình nào thỏa Need ≤ Work → UNSAFE</span></div>`;
+                <div class="step-num" style="background:rgba(255,117,143,.15);border-color:rgba(255,117,143,.3);color:var(--danger)">Kết thúc</div>
+                <div class="step-content"><span class="no">✗ Không tìm được tiến trình nào thỏa Need ≤ Work → UNSAFE</span></div>`;
                 }
                 traceBody.appendChild(div);
             });
